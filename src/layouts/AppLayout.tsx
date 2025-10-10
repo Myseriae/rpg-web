@@ -1,6 +1,6 @@
 import { Outlet } from "react-router-dom";
 import SidebarLink from "../components/SideBarLink.tsx";
-import { LayoutDashboard, Map} from "lucide-react";
+import { LayoutDashboard, Map, PersonStanding} from "lucide-react";
 
 export default function AppLayout() {
   return (
@@ -17,17 +17,11 @@ export default function AppLayout() {
             label="Dashboard"
           />
           <SidebarLink to="/map" icon={<Map size={16} />} label="Map" />
-
-
-          <NavLink
+          <SidebarLink
             to="/character-sheet"
-            className={({ isActive }) =>
-              "block rounded px-3 py-2 " +
-              (isActive ? "bg-zinc-800 text-white" : "text-zinc-400 hover:text-zinc-100")
-            }
-          >
-            Character Sheet
-          </NavLink>
+            label="Character Sheet"
+            icon={<PersonStanding size={16} />}
+          />
           {/* TODO later: Inventory, Spells, Skill Tree */}
         </nav>
       </aside>
