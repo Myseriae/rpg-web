@@ -19,7 +19,16 @@ export default function AppLayout() {
           <SidebarLink to="/map" icon={<Map size={16} />} label="Map" />
 
 
-          {/* TODO later: Character, Inventory, Spells, Skill Tree */}
+          <NavLink
+            to="/character-sheet"
+            className={({ isActive }) =>
+              "block rounded px-3 py-2 " +
+              (isActive ? "bg-zinc-800 text-white" : "text-zinc-400 hover:text-zinc-100")
+            }
+          >
+            Character Sheet
+          </NavLink>
+          {/* TODO later: Inventory, Spells, Skill Tree */}
         </nav>
       </aside>
 
