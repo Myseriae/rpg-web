@@ -1,5 +1,10 @@
 import type { Item } from "./item";
 
+type Inventory = {
+    size: number;
+    items: Item[];
+};
+
 export type Character = {
     strength?: number;
     dexterity?: number;
@@ -9,6 +14,6 @@ export type Character = {
     charisma?: number;
     // Add more character attributes as needed
     // e.g., skills, inventory, spells, etc.
-    inventory?: Item[];
+    inventory?: Inventory;
     equipment?: Item[];
 };

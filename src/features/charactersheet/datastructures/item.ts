@@ -1,5 +1,6 @@
 export type Item = {
     id: string;
+    icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
     name: string;
     description?: string;
     weight?: number;
