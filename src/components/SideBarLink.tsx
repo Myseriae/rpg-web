@@ -1,5 +1,5 @@
 import { NavLink, type NavLinkProps } from "react-router-dom";
-import { cn } from "../utils/cn"; // we'll add this helper in step 3C; for now, just inline classes.
+import { cn } from "../utils/cn.ts"; // we'll add this helper in step 3C; for now, just inline classes.
 
 type Props = {
   to: NavLinkProps["to"];
