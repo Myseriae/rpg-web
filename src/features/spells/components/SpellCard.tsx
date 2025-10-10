@@ -21,8 +21,13 @@ export default function SpellCard({ spell }: { spell: Spell }) {
 
       {/* TODO: render tags as small chips; e.g., damage/aoe/control */}
       {/* Tip: map spell.tags to <span className="text-[10px] ..."> */}
-      <footer className="mt-3 text-[13px] text-zinc-400">
-        Range: {spell.range} • Casting Time: {spell.castingTime}
+      <footer className="mt-3 flex items-center justify-between text-[15px] text-zinc-400">
+        <span>
+          Range: {spell.range} • Casting Time: {spell.castingTime}
+        </span>
+        <span className="text-zinc-500, text-[20px]">
+          Duration: {spell.duration}
+        </span>
       </footer>
     </article>
   );
