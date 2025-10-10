@@ -1,4 +1,6 @@
-import { NavLink, Outlet } from "react-router-dom";
+import { Outlet } from "react-router-dom";
+import SidebarLink from "../components/SideBarLink.tsx";
+import { LayoutDashboard, Map} from "lucide-react";
 
 export default function AppLayout() {
   return (
@@ -8,26 +10,14 @@ export default function AppLayout() {
         <h2 className="text-lg font-semibold mb-4">RPG Web</h2>
 
         <nav className="space-y-2 text-sm">
-          <NavLink
+          <SidebarLink
             to="/"
             end
-            className={({ isActive }) =>
-              "block rounded px-3 py-2 " +
-              (isActive ? "bg-zinc-800 text-white" : "text-zinc-400 hover:text-zinc-100")
-            }
-          >
-            Dashboard
-          </NavLink>
+            icon={<LayoutDashboard size={16} />}
+            label="Dashboard"
+          />
+          <SidebarLink to="/map" icon={<Map size={16} />} label="Map" />
 
-          <NavLink
-            to="/map"
-            className={({ isActive }) =>
-              "block rounded px-3 py-2 " +
-              (isActive ? "bg-zinc-800 text-white" : "text-zinc-400 hover:text-zinc-100")
-            }
-          >
-            Map
-          </NavLink>
 
           {/* TODO later: Character, Inventory, Spells, Skill Tree */}
         </nav>
