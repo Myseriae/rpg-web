@@ -8,7 +8,7 @@ type Props = {
   label: string;
 };
 
-export default function SidebarLink({ to, end, icon, label }: Props) {
+export default function SideBarLink({ to, end, icon, label }: Props) {
   return (
     <NavLink
       to={to}

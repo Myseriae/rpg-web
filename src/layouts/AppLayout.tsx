@@ -1,6 +1,11 @@
 import { Outlet } from "react-router-dom";
-import SidebarLink from "../components/SideBarLink.tsx";
-import { LayoutDashboard, Map, PersonStanding} from "lucide-react";
+import SideBarLink from "../components/SideBarLink.tsx";
+import {
+  LayoutDashboard,
+  Map,
+  PersonStanding,
+  BookOpenText,
+} from "lucide-react";
 
 export default function AppLayout() {
   return (
@@ -10,17 +15,22 @@ export default function AppLayout() {
         <h2 className="text-lg font-semibold mb-4">RPG Web</h2>
 
         <nav className="space-y-2 text-sm">
-          <SidebarLink
+          <SideBarLink
             to="/"
             end
             icon={<LayoutDashboard size={16} />}
             label="Dashboard"
           />
-          <SidebarLink to="/map" icon={<Map size={16} />} label="Map" />
-          <SidebarLink
+          <SideBarLink to="/map" icon={<Map size={16} />} label="Map" />
+          <SideBarLink
             to="/character-sheet"
             label="Character Sheet"
             icon={<PersonStanding size={16} />}
+          />
+          <SideBarLink
+            to="/spells"
+            label="Spells"
+            icon={<BookOpenText size={16} />}
           />
           {/* TODO later: Inventory, Spells, Skill Tree */}
         </nav>
