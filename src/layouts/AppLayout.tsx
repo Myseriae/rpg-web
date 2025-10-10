@@ -5,6 +5,7 @@ import {
   Map,
   PersonStanding,
   BookOpenText,
+  CircleDotDashed,
 } from "lucide-react";
 
 export default function AppLayout() {
@@ -32,7 +33,12 @@ export default function AppLayout() {
             label="Spells"
             icon={<BookOpenText size={16} />}
           />
-          {/* TODO later: Inventory, Spells, Skill Tree */}
+          <SideBarLink
+            to="/skill-tree"
+            label="Skill Tree"
+            icon={<CircleDotDashed size={16} />}
+          />
+          {/* TODO later: Fighter tab */}
         </nav>
       </aside>
 

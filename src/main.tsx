@@ -8,6 +8,7 @@ import Dashboard from "./pages/Dashboard";
 import Map from "./pages/Map";
 import CharacterSheet from "./pages/CharacterSheet";
 import Spells from "./pages/Spells";
+import SkillTree from "./pages/SkillTree";
 import type {Character} from "./features/charactersheet/datastructures/character";
 import type {Item} from "./features/charactersheet/datastructures/item";
 import {Heart} from "lucide-react";
@@ -86,6 +87,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
           <Route path="map" element={<Map />} />
           <Route path="character-sheet" element={<CharacterSheet {...exampleCharacter} />} />
           <Route path="spells" element={<Spells />} />
+          <Route path="skill-tree" element={<SkillTree />} />
         </Route>
       </Routes>
     </BrowserRouter>
