@@ -1,9 +1,6 @@
-import { useState } from "react";
 import "./App.css";
 
 function App() {
-  const [count, setCount] = useState(0);
-
   return (
     <div className="min-h-screen bg-zinc-900 text-zinc-100">
       <header className="p-4 border-b border-zinc-800">
