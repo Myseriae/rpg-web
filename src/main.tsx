@@ -73,8 +73,16 @@ const exampleCharacter: Character = {
   intelligence: 12,
   wisdom: 10,
   charisma: 8,
-  inventory: [exampleItem, exampleItem2, exampleItem3, exampleItem4, exampleItem5],
-  equipment: []
+  inventory: {capacity: 20, size: 5, items: [exampleItem, exampleItem2, exampleItem3, exampleItem4, exampleItem5] },
+  equipment: {
+    head: exampleItem,
+    body: exampleItem2,
+    legs: exampleItem3,
+    feet: exampleItem4,
+    hands: exampleItem5,
+    weaponMainHand: exampleItem,
+    weaponOffHand: exampleItem2
+  }
 };
 
 
