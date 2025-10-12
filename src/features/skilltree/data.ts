@@ -1,85 +1,75 @@
 import type { SkillTree, SkillNode, NodeId } from "./types";
 
+/** Simple grid helpers for positioning nodes by column/tier. */
+const VIEW = { W: 1000, H: 1000 };
+const GRID = {
+  x: (col: number) => 200 + col * 200, // ~200px apart horizontally
+  y: (tier: number) => 140 + (tier - 1) * 180, // tier 1 starts near top
+};
+
+// Convenience builder to keep data tidy.
+function node(
+  id: NodeId,
+  displayName: string,
+  kind: "passive" | "keystone",
+  tier: number,
+  maxRank: number,
+  col: number,
+  opts?: Partial<Pick<SkillNode, "description" | "tags">>
+): SkillNode {
+  return {
+    id,
+    displayName,
+    kind,
+    tier,
+    maxRank,
+    costPerRank: 1,
+    pos: { x: GRID.x(col), y: GRID.y(tier) },
+    ...opts,
+  };
+}
+
+/** Tier thresholds (cumulative points spent in this tree). */
+export const TIER_REQ: number[] = [0, 5, 10, 15];
+
+// --- Example dataset (edit/expand freely) ------------------------------------
+
 const nodes: SkillNode[] = [
-  {
-    id: "1",
-    title: "Origin",
-    kind: "start",
-    pos: { x: 500, y: 500 },
-    links: [],
-    cost: 0,
-    effect: { charisma: 1 },
-  },
-  {
-    id: "2",
-    title: "Stat Boost",
-    kind: "stat",
-    pos: { x: 600, y: 500 },
-    links: [],
-    cost: 1,
-    effect: { strength: 1 },
-  },
-  {
-    id: "3",
-    title: "Stat Boost",
-    kind: "stat",
-    pos: { x: 600, y: 600 },
-    links: [],
-    cost: 1,
-    effect: { dexterity: 1 },
-  },
-  {
-    id: "4",
-    title: "Keystone Ability",
-    kind: "keystone",
-    pos: { x: 700, y: 550 },
-    links: [],
-    cost: 3,
-    effect: { constitution: 2 },
-  },
-  {
-    id: "5",
-    title: "Keystone Ability",
-    kind: "keystone",
-    pos: { x: 700, y: 650 },
-    links: [],
-    cost: 3,
-    effect: { intelligence: 2 },
-  },
+  // Tier 1 (free to access)
+  node("fire-resistance", "Fire Resistance", "passive", 1, 5, 1, {
+    description: "+% fire resist per rank",
+    tags: ["fire", "defense"],
+  }),
+  node("ice-penetration", "Ice Penetration", "passive", 1, 5, 2, {
+    description: "+% ice penetration per rank",
+    tags: ["ice", "offense"],
+  }),
+  node("arcane-efficiency", "Arcane Efficiency", "passive", 1, 3, 3, {
+    description: "Reduce mana costs per rank",
+    tags: ["arcane", "utility"],
+  }),
+
+  // Tier 2 (requires 5 points spent)
+  node("elemental-overload", "Elemental Overload", "passive", 2, 5, 1, {
+    description: "+% elemental damage per rank",
+    tags: ["offense"],
+  }),
+  node("warding", "Warding", "passive", 2, 3, 3, {
+    description: "Incoming damage reduced per rank",
+    tags: ["defense"],
+  }),
+
+  // Tier 3 (requires 10 points spent) — Keystone
+  node("runic-convergence", "Runic Convergence", "keystone", 3, 1, 2, {
+    description:
+      "Keystone: Converts non-physical damage into your dominant element.",
+    tags: ["keystone"],
+  }),
 ];
 
-const byId = new Map<NodeId, SkillNode>(nodes.map((n) => [n.id, n]));
+export const TREE: SkillTree = {
+  nodes,
+  tierRequirements: TIER_REQ,
+};
 
-function connect(a: SkillNode, b: SkillNode) {
-  if (a.id === b.id) return; // no self-links
-  if (!a.links.includes(b.id)) a.links.push(b.id);
-  if (!b.links.includes(a.id)) b.links.push(a.id);
-}
-
-connect(byId.get("1")!, byId.get("2")!);
-connect(byId.get("1")!, byId.get("3")!);
-connect(byId.get("2")!, byId.get("4")!);
-connect(byId.get("3")!, byId.get("5")!);
-connect(byId.get("4")!, byId.get("5")!);
-
-function validateLinks(nodes: SkillNode[]) {
-  for (const n of nodes) {
-    // No self-links
-    if (n.links.includes(n.id)) throw new Error(`Node ${n.id} has a self-link`);
-    // No duplicate links
-    if (new Set(n.links).size !== n.links.length)
-      throw new Error(`Node ${n.id} has duplicate links`);
-    // existence + symmetry
-    for (const linkId of n.links) {
-      const target = byId.get(linkId);
-      if (!target)
-        throw new Error(`Node ${n.id} links to non-existent node ${linkId}`);
-      if (!target.links.includes(n.id))
-        throw new Error(`Node ${n.id} links to ${linkId}, but not vice versa`);
-    }
-  }
-}
-
-validateLinks(nodes);
-
-export const TREE: SkillTree = { nodes };
+export { VIEW, GRID };

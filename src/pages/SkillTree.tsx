@@ -1,52 +1,79 @@
+import { useMemo, useState } from "react";
 import type { NodeId } from "../features/skilltree/types";
 import { TREE } from "../features/skilltree/data";
 import SkillTreeCanvas from "../features/skilltree/components/SkillTreeCanvas";
-import { useState, useMemo } from "react";
 
 export default function SkillTree() {
-  const [unlockedNodes, setUnlockedNodes] = useState<Set<NodeId>>(
-    new Set(["1"]),
-  );
-  const [points, setPoints] = useState(5);
+  // Map of nodeId -> current rank
+  const [ranks, setRanks] = useState<Map<NodeId, number>>(new Map());
 
-  const byId = useMemo(() => new Map(TREE.nodes.map((n) => [n.id, n])), []);
-
-  const totalCost = useMemo(() => 
-    TREE.nodes
-      .filter((n) => unlockedNodes.has(n.id) && n.cost > 0)
-      .reduce((sum, n) => sum + n.cost, 0),
-      [unlockedNodes]
+  // Fast lookup
+  const byId = useMemo(
+    () => new Map(TREE.nodes.map((n) => [n.id, n])),
+    []
   );
 
-  const pointsLeft = points - totalCost;
+  // Total points spent = sum of ranks (costPerRank is 1 for now)
+  const spent = useMemo(
+    () => TREE.nodes.reduce((sum, n) => sum + (ranks.get(n.id) ?? 0), 0),
+    [ranks]
+  );
 
-  const isAdjacent = (n: NodeId) => {
-    const node = byId.get(n);
-    if (!node) return false;
-    return node.links.some((linkId) => unlockedNodes.has(linkId));
-  }
+  // Tier gating: unlock tier t (1-based) when spent >= tierRequirements[t-1]
+  const tierUnlocked = (t: number) =>
+    spent >= (TREE.tierRequirements[t - 1] ?? Number.POSITIVE_INFINITY);
 
-  const canUnlock = (n: NodeId) => {
-    const node = byId.get(n);
-    if (!node) return false;
-    if (unlockedNodes.has(n)) return true;
-    if (node.cost < pointsLeft && isAdjacent(n)) return true;
-    return false;
-  }
+  // Can rank up a node?
+  const canRankUp = (id: NodeId) => {
+    const n = byId.get(id)!;
+    const r = ranks.get(id) ?? 0;
+    if (r >= n.maxRank) return false;
+    if (!tierUnlocked(n.tier)) return false;
+    return true;
+  };
 
-  function onNodeClick(id: NodeId) {
-    if (id === "1") return; // cannot toggle start node
-    const next = new Set(unlockedNodes);
-    if (next.has(id)) {
-      if (id !== "1") next.delete(id);
-    } else if (canUnlock(id)) next.add(id);
-    setUnlockedNodes(next);
-  }
+  // Click handler: increment rank if allowed
+  const onNodeClick = (id: NodeId) => {
+    if (!canRankUp(id)) return;
+    setRanks((prev) => {
+      const next = new Map(prev);
+      next.set(id, (next.get(id) ?? 0) + 1);
+      return next;
+    });
+  };
+
+  // Progress summary for header
+  const maxTier = Math.max(...TREE.nodes.map((n) => n.tier));
+  const nextTier = Math.min(
+    ...[...Array(maxTier + 1).keys()]
+      .slice(1) // tiers are 1..maxTier
+      .filter((t) => !tierUnlocked(t))
+      .concat(maxTier + 1)
+  );
+  const nextReq = TREE.tierRequirements[(nextTier - 1) | 0] ?? 0;
 
   return (
-    <section>
-      <h1 className="text-2xl font-semibold mb-4">Skill Tree</h1>
-      <SkillTreeCanvas tree={TREE} unlockedNodes={unlockedNodes} canUnlock={canUnlock} onNodeClick={onNodeClick} />
+    <section className="p-6">
+      <header className="mb-4 flex items-center justify-between">
+        <h1 className="text-2xl font-semibold">Skill Tree</h1>
+        <div className="text-sm text-zinc-400">
+          Spent: <span className="text-zinc-200">{spent}</span>
+          {nextTier <= maxTier && (
+            <>
+              {" "}| Next tier {nextTier} at{" "}
+              <span className="text-zinc-200">{nextReq}</span>
+            </>
+          )}
+        </div>
+      </header>
+
+      <SkillTreeCanvas
+        tree={TREE}
+        ranks={ranks}
+        canRankUp={canRankUp}
+        onNodeClick={onNodeClick}
+        spent={spent}
+      />
     </section>
   );
 }
