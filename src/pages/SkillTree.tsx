@@ -1,5 +1,6 @@
-import React from "react";
+import { TREE } from "../features/skilltree/data";
 
-export default function () {
+export default function SkillTree() {
+  console.log("Skill nodes:", TREE.nodes, TREE.nodes.length);
   return <div></div>;
 }
