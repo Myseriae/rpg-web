@@ -1,9 +1,8 @@
-import type { SkillNode } from "./types";
-import type { NodeId } from "./types";
+import type { SkillTree, SkillNode, NodeId } from "./types";
 
 const nodes: SkillNode[] = [
   {
-    id: "start",
+    id: "1",
     title: "Origin",
     kind: "start",
     pos: { x: 500, y: 500 },
@@ -12,7 +11,7 @@ const nodes: SkillNode[] = [
     effect: { charisma: 1 },
   },
   {
-    id: "stat1",
+    id: "2",
     title: "Stat Boost",
     kind: "stat",
     pos: { x: 600, y: 500 },
@@ -21,7 +20,7 @@ const nodes: SkillNode[] = [
     effect: { strength: 1 },
   },
   {
-    id: "stat2",
+    id: "3",
     title: "Stat Boost",
     kind: "stat",
     pos: { x: 600, y: 600 },
@@ -30,7 +29,7 @@ const nodes: SkillNode[] = [
     effect: { dexterity: 1 },
   },
   {
-    id: "keystone1",
+    id: "4",
     title: "Keystone Ability",
     kind: "keystone",
     pos: { x: 700, y: 550 },
@@ -39,7 +38,7 @@ const nodes: SkillNode[] = [
     effect: { constitution: 2 },
   },
   {
-    id: "keystone2",
+    id: "5",
     title: "Keystone Ability",
     kind: "keystone",
     pos: { x: 700, y: 650 },
@@ -57,11 +56,11 @@ function connect(a: SkillNode, b: SkillNode) {
   if (!b.links.includes(a.id)) b.links.push(a.id);
 }
 
-connect(byId.get("start")!, byId.get("stat1")!);
-connect(byId.get("start")!, byId.get("stat2")!);
-connect(byId.get("stat1")!, byId.get("keystone1")!);
-connect(byId.get("stat2")!, byId.get("keystone2")!);
-connect(byId.get("keystone1")!, byId.get("keystone2")!);
+connect(byId.get("1")!, byId.get("2")!);
+connect(byId.get("1")!, byId.get("3")!);
+connect(byId.get("2")!, byId.get("4")!);
+connect(byId.get("3")!, byId.get("5")!);
+connect(byId.get("4")!, byId.get("5")!);
 
 function validateLinks(nodes: SkillNode[]) {
   for (const n of nodes) {
